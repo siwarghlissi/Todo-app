@@ -1,5 +1,6 @@
 # Default values for todo-api
-replicaCount: 2
+replicaCount: 3
+
 
 image:
   repository: siwar10/todo-api
