@@ -9,6 +9,7 @@ on:
 jobs:
   build-test-and-push:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -55,8 +56,36 @@ jobs:
       - name: Push image to Docker Hub
         run: docker push siwar10/todo-api:latest
 
+      - name: Start test container
+        run: |
+          docker run -d -p 3000:3000 --name todo-api-test siwar10/todo-api:latest
+          sleep 10
+
+      - name: Run OWASP ZAP Baseline Scan
+        run: |
+          mkdir -p security/reports
+          docker run --rm \
+            --network host \
+            -v ${{ github.workspace }}/security/reports:/zap/wrk/:rw \
+            owasp/zap2docker-stable zap-baseline.py \
+            -t http://localhost:3000 \
+            -r zap-report.html \
+            -J zap-report.json \
+            -w zap-report.md \
+            -I
+
+      - name: Upload ZAP Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: zap-scan-report
+          path: security/reports/
+
+      - name: Stop test application
+        if: always()
+        run: docker stop todo-api-test || true
+
       - name: Deploy summary
         run: |
           echo " Tests passed"
-          echo " Security scan completed"
+          echo " Security scan completed (Trivy + ZAP)"
           echo " Image pushed: siwar10/todo-api:latest"

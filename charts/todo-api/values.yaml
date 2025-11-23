@@ -53,8 +53,6 @@ app:
   logLevel: info
   port: 3000
 
- 
-
 # Monitoring
 monitoring:
   enabled: true
