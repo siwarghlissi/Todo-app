@@ -24,6 +24,9 @@ jobs:
 
       - name: Run tests
         run: npm test
+        
+      - name: Run npm audit
+        run: npm audit --audit-level=high
 
       - name: Run Trivy security scan
         uses: aquasecurity/trivy-action@master
