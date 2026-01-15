@@ -67,7 +67,7 @@ jobs:
           docker run --rm \
             --network host \
             -v ${{ github.workspace }}/security/reports:/zap/wrk/:rw \
-            owasp/zap2docker-stable zap-baseline.py \
+            zaproxy/zap-stable zap-baseline.py \
             -t http://localhost:3000 \
             -r zap-report.html \
             -J zap-report.json \
