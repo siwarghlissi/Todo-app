@@ -3,10 +3,11 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: {{ include "todo-api.fullname" . }}
-  namespace: {{ .Values.namespace | default "todo-app" }}
+  namespace: {{ .Release.Namespace }}
+
   labels:
+    release: monitoring
     {{- include "todo-api.labels" . | nindent 4 }}
-    prometheus: kube-prometheus
 spec:
   selector:
     matchLabels:

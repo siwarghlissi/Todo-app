@@ -2,7 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "todo-api.fullname" . }}
-  namespace: {{ .Values.namespace | default "todo-app" }}
+  namespace: {{ .Release.Namespace }}
+
   labels:
     {{- include "todo-api.labels" . | nindent 4 }}
 spec:
